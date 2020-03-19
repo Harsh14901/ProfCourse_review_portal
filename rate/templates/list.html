@@ -1,0 +1,9 @@
+<ul>
+{% for dept in dept_list %}
+    <li> <h2> {{dept.name}}</h2>
+        <ul>
+        {% block body %}
+        {% endblock %}
+        </ul>
+{% endfor %}
+</ul>

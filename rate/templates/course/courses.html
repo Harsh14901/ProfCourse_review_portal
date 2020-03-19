@@ -1,0 +1,10 @@
+{% extends '../list.html' %}
+
+
+{% block body %}
+    {% for course in dept.courses_set.all %}
+                <li> {{course.name}} : {{course.title}}
+            {% endfor %}
+{% endblock  %}
+            
+        

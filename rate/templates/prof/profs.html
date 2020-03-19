@@ -1,0 +1,9 @@
+{% extends '../list.html' %}
+
+{% block body %}
+    {% for prof in dept.profs_set.all %}
+                <li> {{prof.name}}
+    {% endfor %}
+{% endblock %}
+            
+        
