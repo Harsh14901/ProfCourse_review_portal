@@ -2,7 +2,7 @@
 
 {% block body %}
     {% for prof in dept.profs_set.all %}
-                <li> {{prof.name}}
+                <a href = "{% url 'p_data' prof.id %}"><li> {{prof.name}} </a>
     {% endfor %}
 {% endblock %}
             

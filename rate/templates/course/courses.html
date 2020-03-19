@@ -3,7 +3,7 @@
 
 {% block body %}
     {% for course in dept.courses_set.all %}
-                <li> {{course.name}} : {{course.title}}
+               <a href = "{% url 'c_data' course.id %}"> <li> {{course.code}} : {{course.title}}</a>
             {% endfor %}
 {% endblock  %}
             
