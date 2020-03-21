@@ -14,5 +14,4 @@ urlpatterns = [
     url(r'^courses/(?P<pk>[0-9]+)/$',CoursePage,name="c_data"),
     url(r'^courses/(?P<pk>[0-9]+)/create/$',CourseReviewCreateView.as_view(), name="course_review"),
     url(r'^courses/', CoursesListView.as_view(), name="courses"),
-    
 ]

@@ -151,6 +151,21 @@ class CourseReviewCreateView(LoginRequiredMixin,CreateView):
             course = get_object_or_404(Courses, id=self.kwargs['pk'])
             return {"course": course}
 
+
+class UserCreateView(CreateView):
+    model = User
+    template_name = "form/signup.html"
+    form_class = SignUpForm
+    success_url = "/accounts/profile/"
+
+@login_required(login_url="/accounts/login/")
+def UserProfile(request):
+    return render(request,template_name="profile.html")
+
+
+    
+
+
             
     
     
