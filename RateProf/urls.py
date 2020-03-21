@@ -5,5 +5,6 @@ from django.urls.conf import include
 
 urlpatterns = [
     url('admin/', admin.site.urls),
-    url('rate/',include("rate.urls"))
+    url('rate/',include("rate.urls")),
+    url('accounts/', include('django.contrib.auth.urls'))
 ]

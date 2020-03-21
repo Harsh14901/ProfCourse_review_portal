@@ -14,3 +14,7 @@
 <a href = "mailto:{{prof_data.email}}?Subject=Hello" _target="top"> Email the prof </a>
 
 {% endblock bio %}
+
+{% block add_review %}
+<a href = {% url 'prof_review' id%}> Click here to add a review </a>
+{% endblock add_review %}

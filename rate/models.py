@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 # Create your models here.
 class Dept(models.Model):
     name = models.CharField(max_length=10)
@@ -18,11 +19,13 @@ class Review(models.Model):
         (5, "Excellent"),
     )
 
-    username = models.CharField(max_length=50)
-    actual_name = models.CharField(max_length=50)
-    email = models.EmailField(max_length=254)
+    # username = models.CharField(max_length=50)
+    # actual_name = models.CharField(max_length=50)
+    # email = models.EmailField(max_length=254)
+    user = models.ForeignKey(User, on_delete=models.CASCADE,null=True,blank=True)
+
     comment = models.TextField(max_length=4096)
-    isAnonymous = models.BooleanField(default=False)
+    isAnonymous = models.BooleanField(default=False,verbose_name="Remain Anonymous?")
     
     prof = models.ForeignKey("Profs", on_delete=models.CASCADE,null=True)
     course = models.ForeignKey("Courses", on_delete=models.CASCADE,null=True)

@@ -1,20 +1,27 @@
-from django.shortcuts import render
+from django.shortcuts import render , get_object_or_404
 from django.http import HttpResponse
 from django.views.generic import ListView
 from django.views.generic import DetailView
 from rate.models import *
-
-import random
-import names
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from .forms import *
+# import random
+# import names
 # Create your views here.
+
 
 class ProfsListView(ListView):
     model = Dept
     template_name = "prof/profs.html"
     context_object_name = "dept_list"
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
+
+        # print(self.request.session)
         """ Populating the Profs and Courses table """
 
         # dl = Dept.objects.all()
@@ -59,12 +66,12 @@ class ProfsListView(ListView):
         #         r.isAnonymous = bool(random.randint(0,1))
 
         #         r.comment = f"This is a sample comment to test out during development"
-                
+
         #         print(r.prof,r.course,r.username,r.actual_name,r.comment,r.email)
         #         r.save()
 
         return context
-    
+
 
 class CoursesListView(ListView):
     model = Dept
@@ -72,35 +79,78 @@ class CoursesListView(ListView):
     context_object_name = "dept_list"
 
 
-class ProfDetailView(DetailView):
-    model=Profs
+# class ProfDetailView(DetailView):
+#     model=Profs
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['reviews'] = context['prof_data'].review_set.all()
+#         # print(context['reviews'])
+#         return context
+
+#     template_name = "prof/prof_page.html"
+#     context_object_name = "prof_data"
+
+
+# class CourseDetailView(DetailView):
+#     model=Courses
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['reviews'] = context['course_data'].review_set.all()
+#         return context
+
+
+#     template_name = "course/course_page.html"
+#     context_object_name = "course_data"
+
+def ProfPage(request, pk):
+    prof_data = get_object_or_404(Profs,pk=pk)
+    return render(request=request, template_name="prof/prof_page.html", context={"prof_data": prof_data, "reviews": prof_data.review_set.all(),"id":pk})
+
+
+def CoursePage(request, pk):
+    course_data = get_object_or_404(Courses, pk=pk)
+    return render(request=request, template_name="course/course_page.html", context={"course_data": course_data, "reviews": course_data.review_set.all(),"id":pk})
+
+
+# @login_required(login_url="/accounts/login/")
+# def AddReview(request):
+#     return HttpResponse("You have been authenticated")
+
+class ProfReviewCreateView(LoginRequiredMixin,CreateView):
+    login_url = "/accounts/login"
+    template_name = "form/review_form.html"
+    form_class = ReviewForm
+    # labels = {'content_quality':"how good was the content",'isAnonymous' : "Remain anonymous?"}
+    def get_success_url(self):
+            return reverse("p_data",args=self.kwargs['pk'])
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
     
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['reviews'] = context['prof_data'].review_set.all()
-        # print(context['reviews'])
-        return context
     
-    template_name = "prof/prof_page.html"
-    context_object_name = "prof_data"
+    def get_initial(self):
+            prof = get_object_or_404(Profs, id=self.kwargs['pk'])
+            return {"prof": prof} 
 
-
-class CourseDetailView(DetailView):
-    model=Courses
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['reviews'] = context['course_data'].review_set.all()
-        return context
+            
+class CourseReviewCreateView(LoginRequiredMixin,CreateView):
+    login_url = "/accounts/login"
+    template_name = "form/review_form.html"
+    form_class = ReviewForm
+    # labels = {'content_quality':"how good was the content",'isAnonymous' : "Remain anonymous?"}
+    def get_success_url(self):
+            return reverse("c_data", args=self.kwargs['pk'])
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
     
-
-    template_name = "course/course_page.html"
-    context_object_name = "course_data"
-
-# def ProfPage(request,prof_id):
-#     return render(request=request,template_name="prof/prof_page.html",context={"prof_data":Profs.objects.get(id=prof_id)})
     
-# def CoursePage(request,course_id):
-#     print("Course Page called")
-#     return render(request=request,template_name="course/course_page.html",context={"course_data":Courses.objects.get(id=course_id)})
+    def get_initial(self):
+            course = get_object_or_404(Courses, id=self.kwargs['pk'])
+            return {"course": course}
+
+            
+    
     

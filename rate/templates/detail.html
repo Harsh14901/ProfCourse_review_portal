@@ -11,7 +11,7 @@
             {% if review.isAnonymous %}
                 <h4> NAME: ANONYMOUS </h4>
             {% else %} 
-                <h4> NAME: {{review.actual_name}}
+                <h4> NAME: {{review.user.first_name}} {{review.user.last_name}}
             {% endif %}
             {% if review.prof is not None %}
             <h5> PROF : {{review.prof.name}} </h5>
@@ -37,3 +37,28 @@
     {% endfor %}
 </ol>
 </div>
+
+<div id ="add_review">
+{% block add_review %}
+{% endblock add_review %}
+</div>
+
+
+{% comment %} 
+<script>
+    function Disable(){
+  document.getElementById("add_review").style.visibility = "visible"
+  }
+</script>
+<div id = "add_review" style="visibility:hidden">
+
+{% if user.is_authenticated %}
+    <p> Congrats now u can add a comment </p>
+{% else %}
+<p> You must be logged in to add a review
+    <a href= "{% url 'login' %}?redirect_to={{request.path}}"> Click here to login </a>
+{% endif %}
+ 
+
+</div>
+{% endcomment %}
