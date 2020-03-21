@@ -1,3 +1,6 @@
+{% extends 'base.html' %}
+{% block base_body %}
+
 {% if form.errors %}
     <p>Your username and password didn't match. Please try again.</p>
   {% endif %}
@@ -18,4 +21,6 @@
     <input type="submit" value="login" />
   </form>
 
-<a href =""> New User? Click to sign up </a>
+<a href ="{% url 'signup' %}"> New User? Click to sign up </a>
+
+{% endblock base_body %}

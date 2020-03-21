@@ -23,6 +23,7 @@ class Review(models.Model):
     # actual_name = models.CharField(max_length=50)
     # email = models.EmailField(max_length=254)
     user = models.ForeignKey(User, on_delete=models.CASCADE,null=True,blank=True)
+    timestamp = models.DateTimeField(auto_now=True, auto_now_add=False,null=True)
 
     comment = models.TextField(max_length=4096)
     isAnonymous = models.BooleanField(default=False,verbose_name="Remain Anonymous?")

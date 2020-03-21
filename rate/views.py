@@ -8,10 +8,34 @@ from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .forms import *
-# import random
-# import names
+import random
+import names
+from datetime import datetime as dt
 # Create your views here.
 
+def index(request):
+    """ Adding users to the database and giving user info to all reviews """
+
+    """ Adding 10 users """
+    # for i in range(10):
+    #     f_name = names.get_first_name()
+    #     l_name = names.get_last_name()
+    #     email = f"{f_name}{random.randint(1000,9000)}@gmail.com"
+    #     user = User(username=f"user{i+1}",password=f"user{i+1}@123",first_name=f_name,last_name=l_name,email=email)
+    #     print(user.email)
+    #     user.save()
+    
+    # for review in Review.objects.all():
+    #     ul = User.objects.exclude(username="admin")
+    #     user = ul[random.randint(0,len(ul)-1)]
+    #     stamp = dt(random.randint(2016,2019),random.randint(1,12),random.randint(1,28),random.randint(0,13),random.randint(0,59),random.randint(0,59))
+    #     review.timestamp = stamp
+    #     review.user = user
+    #     print(review.timestamp,review.user)
+    #     review.save()
+        
+    
+    return render(request,template_name="index.html")
 
 class ProfsListView(ListView):
     model = Dept
@@ -160,7 +184,8 @@ class UserCreateView(CreateView):
 
 @login_required(login_url="/accounts/login/")
 def UserProfile(request):
-    return render(request,template_name="profile.html")
+    activity = request.user.review_set.all().order_by("-timestamp")
+    return render(request,template_name="profile.html",context={"reviews":activity})
 
 
     

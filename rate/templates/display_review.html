@@ -1,0 +1,24 @@
+
+        <li>
+            {% if review.isAnonymous %}
+                <h4> NAME: ANONYMOUS </h4>
+            {% else %} 
+                <h4> NAME: {{review.user.first_name}} {{review.user.last_name}}
+            {% endif %}
+            {% if review.prof is not None %}
+            <h5> PROF : {{review.prof.name}} </h5>
+            {% endif %}
+            {% if review.course is not None %}
+            <h5> COURSE : {{review.course.code}} </h5>
+            {% endif %}
+
+             <textarea name="text" wrap="hard" rows="5" cols="20" readonly > {{review.comment}} </textarea>
+            <div class = "ratings">
+                <ul>
+                    <li> Difficulty : {{review.get_difficulty_display}}
+                    <li> Content Quality : {{review.get_content_quality_display}}
+                    <li> Grading : {{review.get_grading_display}}
+                    <li> Attendance : {{review.get_attendance_display}}
+                    <li> <b> Overall Rating : {{review.get_overall_rating_display}} </b>
+                </ul>
+            </div>

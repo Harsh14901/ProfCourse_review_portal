@@ -1,17 +1,1 @@
-{% if form.errors %}
-    <h1 color="red"> Please resolve the errors berfore submitting!! </h1>
-{% endif %}
-
-<form action="" method = "POST">
-{% csrf_token %}
-
-{% comment %} {% for field in form %}
-{% if field.label == "User" %}
-<input type="hidden" value={{user}}> </input>
-{% endif %}
-{% endfor %} {% endcomment %}
-<table>
-{{form.as_table}}
-</table>
-<input type="Submit" value="Submit" >
-</form>
+{% extends 'form/form_generic.html' %}

@@ -1,3 +1,5 @@
+{% extends 'base.html' %}
+{% block base_body %}
 <ul>
 {% for dept in dept_list %}
     <li> <h2> {{dept.name}}</h2>
@@ -7,3 +9,4 @@
         </ul>
 {% endfor %}
 </ul>
+{% endblock base_body %}

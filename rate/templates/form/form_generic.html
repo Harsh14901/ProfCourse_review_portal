@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block base_body %}
+    {% if form.errors %}
+    <h2 color="red"> Please Resolve the errors </h1>
+    {% endif %}
+
+    <form action="" method = "POST">
+    {% csrf_token %}
+    <table>
+    {{form.as_table}}
+    </table>
+    <input type="Submit" value="Submit" >
+    </form>
+
+{% endblock base_body %}
+
+{% block form_generic_body %}
+{% endblock form_generic_body %}

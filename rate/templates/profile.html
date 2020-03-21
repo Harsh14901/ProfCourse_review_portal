@@ -1,1 +1,21 @@
+{% extends 'base.html' %}
+
+{% block base_body %}
 <h1> Hello {{user.first_name}} </h1>
+<ul>
+<li> Name : {{user.name}}
+<li> Username: {{user.username}}
+<li> Email Address : {{user.email}}
+</ul>
+
+<h2><u> Recent Reviews </u></h2>
+
+<ol>
+{% for review in reviews %}
+    <h3> Timestamp : {{review.timestamp}} </h3>
+    {% include "display_review.html" %}
+    
+{% endfor %}
+</ol>
+{% endblock base_body %}
+
