@@ -188,9 +188,20 @@ def UserProfile(request):
     return render(request,template_name="profile.html",context={"reviews":activity})
 
 
-    
+class ReportCreateView(LoginRequiredMixin,CreateView):
+    login_url = "/accounts/login/"
+    model = ReportReview
+    template_name = "form/report_form.html"
+    fields = ['category','reason']
+    success_url = "/accounts/profile"
+
+    def form_valid(self, form):
+        review = get_object_or_404(Review,id=self.kwargs['pk'])
+        form.instance.review = review
+        form.instance.reporting_user = self.request.user
+        
+        return super().form_valid(form)
 
 
-            
     
     

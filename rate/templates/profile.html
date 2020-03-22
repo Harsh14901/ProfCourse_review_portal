@@ -3,11 +3,16 @@
 {% block base_body %}
 <h1> Hello {{user.first_name}} </h1>
 <ul>
-<li> Name : {{user.name}}
 <li> Username: {{user.username}}
 <li> Email Address : {{user.email}}
 </ul>
-
+{% if user.warnings_set.all %}
+<ol>
+{% for warning in user.warnings_set.all %}
+<li> <textarea cols = "40" rows = "10" readonly> {{warning.message}}</textarea>
+{% endfor %}
+</ol>
+{% endif %}
 <h2><u> Recent Reviews </u></h2>
 
 <ol>

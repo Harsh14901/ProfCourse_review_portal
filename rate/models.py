@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
+from datetime import datetime as dt
 # Create your models here.
 class Dept(models.Model):
     name = models.CharField(max_length=10)
@@ -49,7 +51,7 @@ class Review(models.Model):
         else:
             c_name = self.course.code
         
-        return f"Prof - {p_name} | Course - {c_name} | Rating - {str(self.overall_rating)}"
+        return f"Prof - {p_name} | Course - {c_name} | Rating - {str(self.overall_rating)} | User - {self.user.username}"
         
     
 
@@ -73,6 +75,72 @@ class Courses(models.Model):
 
     def __str__(self):
         return self.code
+
+class ReportReview(models.Model):
+    SPAM = "Spam"
+    FRAUD = "Fraud"
+    OFFENSIVE = "Offensive"
+
+    CategoryChoices = (
+        (SPAM, "Spam"),
+        (FRAUD, "Fraud"),
+        (OFFENSIVE, "Offensive"),
+    )
+
+    review = models.ForeignKey("Review", on_delete=models.CASCADE)
+    reporting_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    category = models.CharField(max_length=50, choices=CategoryChoices)
+    reason = models.TextField(verbose_name="Please specify any other details", max_length=5000)
+
+    def __str__(self):
+        return f"Category : {self.category} | Reported User : {self.review.user.username}" 
+    
+    @property
+    def reported_user(self):
+            return self.review.user
+
+
+# class Activity(models.Model):
+#     COMMENT = "Comment"
+#     REPORT = "Report"
+#     CategoryChoices = (
+#         (COMMENT,"Comment"),
+#         (REPORT,"Report"),
+#     )
+
+#     category = models.CharField(choices=CategoryChoices, max_length=50)
+#     review = models.ForeignKey("Review", on_delete=models.CASCADE)
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     def __str__(self):
+#         return f"{self.category} | Review : {self.review}"
+    
+class Warnings(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+
+
+class Banned(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    ban_date = models.DateTimeField(auto_now=True, auto_now_add=False)
+    ban_duration = models.DurationField(null=True)
+    permanent_ban = models.BooleanField(default=False)
+
+    @property
+    def ban_relieve(self):
+        if(not self.permanent_ban):
+            return self.ban_date + self.ban_duration
+        else:
+            return "Banned Permanently"
+
+    @property
+    def time_to_relieve(self):
+        if(not self.permanent_ban):
+            return str((self.ban_relieve - dt.today()).days) + " days"
+        else:
+            return "Banned permanently"
+    
+    def __str__(self):
+        return self.user.__str__()
     
 
 

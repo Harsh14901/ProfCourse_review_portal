@@ -8,8 +8,9 @@
 <h2> {{course_data.title}} </h2>
 <h4> Department : {{course_data.dept}} </h4>
 
+<a href = {% url 'course_review' id%}> Click here to add a review </a>
+
 {% endblock bio%}
 
-{% block add_review %}
-<a href = {% url 'course_review' id%}> Click here to add a review </a>
-{% endblock add_review %}
+
+
