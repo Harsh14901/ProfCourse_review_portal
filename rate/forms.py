@@ -1,7 +1,9 @@
+from django.contrib.auth.forms import AuthenticationForm
 from django import forms
 from rate.models import *
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
 
 
@@ -36,4 +38,17 @@ class ReviewForm(forms.ModelForm):
             self.fields["course"].queryset = Courses.objects.filter(id=course.id)
             self.fields["prof"].queryset = course.dept.profs_set.all()
         
-        
+
+class AuthenticationFormCheckBanned(AuthenticationForm):
+    def confirm_login_allowed(self, user):
+        bl = user.banned_set.all()
+        if (bl and "Free" not in bl[0].time_to_relieve):
+            msg = "Your account has been banned "
+            if("permanent" in bl[0].time_to_relieve):
+                msg += "PERMANENTLY"
+            else:
+                msg += "for " + bl[0].time_to_relieve
+            raise forms.ValidationError(
+                (msg),
+                code='inactive',
+            )

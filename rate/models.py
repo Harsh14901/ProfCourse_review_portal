@@ -135,7 +135,10 @@ class Banned(models.Model):
     @property
     def time_to_relieve(self):
         if(not self.permanent_ban):
-            return str((self.ban_relieve - dt.today()).days) + " days"
+            if(self.ban_relieve > dt.today()):
+                return str((self.ban_relieve - dt.today()).days) + " days"
+            else:
+                return "Free to relieve"
         else:
             return "Banned permanently"
     

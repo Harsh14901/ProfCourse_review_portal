@@ -1,5 +1,5 @@
 from django.shortcuts import render , get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import ListView
 from django.views.generic import DetailView
 from rate.models import *
@@ -11,7 +11,10 @@ from .forms import *
 import random
 import names
 from datetime import datetime as dt
+from django.contrib.auth.views import LoginView
+from django.core.exceptions import ValidationError
 # Create your views here.
+
 
 def index(request):
     """ Adding users to the database and giving user info to all reviews """
@@ -203,5 +206,4 @@ class ReportCreateView(LoginRequiredMixin,CreateView):
         return super().form_valid(form)
 
 
-    
     
