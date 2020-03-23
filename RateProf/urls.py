@@ -11,6 +11,7 @@ urlpatterns = [
     url('rate/',include("rate.urls")),
     url(r'accounts/profile/',UserProfile,name='user_profile'),
     url(r'accounts/login/', auth_views.LoginView.as_view(authentication_form=AuthenticationFormCheckBanned), name='user_login'),
+    url(r'accounts/logout', LogoutLog.as_view(),name="logout"),
     url('accounts/', include('django.contrib.auth.urls')),
     url(r'^signup/$', UserCreateView.as_view(), name="signup")
 ]

@@ -98,22 +98,7 @@ class ReportReview(models.Model):
     @property
     def reported_user(self):
             return self.review.user
-
-
-# class Activity(models.Model):
-#     COMMENT = "Comment"
-#     REPORT = "Report"
-#     CategoryChoices = (
-#         (COMMENT,"Comment"),
-#         (REPORT,"Report"),
-#     )
-
-#     category = models.CharField(choices=CategoryChoices, max_length=50)
-#     review = models.ForeignKey("Review", on_delete=models.CASCADE)
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     def __str__(self):
-#         return f"{self.category} | Review : {self.review}"
-    
+   
 class Warnings(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     message = models.TextField()
@@ -146,8 +131,40 @@ class Banned(models.Model):
         return self.user.__str__()
     
 
+class Activity(models.Model):
+    SIGNUP = "Signup"
+    LOGIN = "Login"
+    LOGOUT = "Logout"
+    COMMENT = "Comment"
+    REPORT = "Report"
+    CategoryChoices = (
+        (COMMENT,"Comment"),
+        (REPORT,"Report"),
+        (LOGIN,"Login"),
+        (LOGOUT,"Logout"),
+        (SIGNUP,"Signup"),
+    )
 
+    category = models.CharField(choices=CategoryChoices, max_length=50)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now=True, auto_now_add=False)
+    log = models.TextField(null=True)
+    def __str__(self):
+        return f"{self.category} | user : {self.user}"
 
+    def login_log(self):
+        self.log = f"{self.user} Logged in "
+    
+    def signup_log(self):
+        self.log = f"{self.user} Signed up "
 
+    def logout_log(self):
+        self.log = f"{self.user} Logged out "
 
+    def comment_log(self,review):
+        self.log = f"{self.user} added a comment to {review.prof} and {review.course} with comment {review.comment}"
+
+    def report_log(self,report):
+        self.log = f"{self.user} reported a comment by {report.reported_user} on prof {report.review.prof} and course {report.review.course}"
+     
 

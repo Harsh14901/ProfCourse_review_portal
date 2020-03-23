@@ -16,6 +16,13 @@ class SignUpForm(UserCreationForm):
         model = User
         fields = ('username','password1','password2','email','first_name','last_name')
 
+    def save(self, commit=True):
+        user = super().save(commit=commit)
+        signup = Activity(user=user,category=Activity.SIGNUP)
+        signup.signup_log()
+        signup.save()
+        return user
+
 
 class ReviewForm(forms.ModelForm):
     class Meta:
@@ -52,3 +59,7 @@ class AuthenticationFormCheckBanned(AuthenticationForm):
                 (msg),
                 code='inactive',
             )
+        else:
+            login_activity = Activity(user=user,category=Activity.LOGIN)
+            login_activity.login_log()
+            login_activity.save()

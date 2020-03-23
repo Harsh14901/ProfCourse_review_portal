@@ -40,8 +40,7 @@ def ban_users(modeladmin, request, queryset):
     if(request.POST['permanent_ban']):
         ban_perm = True
     else:
-        duration = timedelta(days=int(post['duration_0']), hours=int(
-            post['duration_1']), minutes=int(post['duration_2']), seconds=int(post['duration_3']))
+        duration = timedelta(days=int(post['duration_0']), hours=int(post['duration_1']), minutes=int(post['duration_2']), seconds=int(post['duration_3']))
 
     for report in queryset:
         user = report.reported_user
@@ -54,8 +53,7 @@ def ban_users(modeladmin, request, queryset):
             ban.ban_duration = duration
         ban.save()
     if(not ban_perm):
-        messages.success(
-            request, f"{str(len(queryset))} Users have(has) been banned for {str(duration)}")
+        messages.success(request, f"{str(len(queryset))} Users have(has) been banned for {str(duration)}")
     else:
         messages.success(request, f"{str(len(queryset))} Users have(has) been banned Permanently")
 
@@ -63,11 +61,10 @@ def ban_users(modeladmin, request, queryset):
 send_warning_to_user.short_description = "Send warning to the reported user"
 delete_reported_reviews.short_description = "Delete the corresponding reviews"
 send_warning_and_delete.short_description = "Send warning and delete the selected"
-
+ban_users.short_description = "Ban all the users who posted these reviews"
 
 class BanDurationForm(ActionForm):
-    duration = forms.DurationField(widget=tdw(), required=False, initial=timedelta(
-        days=10), help_text="Enter the duration to ban all the selected users", label="Ban Duration")
+    duration = forms.DurationField(widget=tdw(), required=False, initial=timedelta(days=10), help_text="Enter the duration to ban all the selected users", label="Ban Duration")
     permanent_ban = forms.BooleanField(label="Ban Permanently?", initial=False)
 
 
@@ -75,11 +72,13 @@ class BanDurationForm(ActionForm):
 class ReportReviewAdmin(admin.ModelAdmin):
     action_form = BanDurationForm
     list_display = ['category', 'reporting_user', 'reported_user', 'review']
-    actions = [delete_reported_reviews, send_warning_to_user,
-               send_warning_and_delete, ban_users]
+    actions = [delete_reported_reviews, send_warning_to_user,send_warning_and_delete, ban_users]
 
 
 @admin.register(Banned)
 class BannedAdmin(admin.ModelAdmin):
-    list_display = ['user', 'ban_date', 'ban_relieve',
-                    'ban_duration', 'time_to_relieve']
+    list_display = ['user', 'ban_date', 'ban_relieve','ban_duration', 'time_to_relieve']
+
+@admin.register(Activity)
+class ActivityAdmin(admin.ModelAdmin):
+    list_display = ['user','category','timestamp','log']

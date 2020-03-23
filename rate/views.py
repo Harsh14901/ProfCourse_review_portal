@@ -11,7 +11,7 @@ from .forms import *
 import random
 import names
 from datetime import datetime as dt
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView,LogoutView
 from django.core.exceptions import ValidationError
 # Create your views here.
 
@@ -151,9 +151,15 @@ class ProfReviewCreateView(LoginRequiredMixin,CreateView):
     form_class = ReviewForm
     # labels = {'content_quality':"how good was the content",'isAnonymous' : "Remain anonymous?"}
     def get_success_url(self):
-            return reverse("p_data",args=self.kwargs['pk'])
+        print(self.kwargs['pk'])
+        # print(reverse("p_data",args=self.kwargs['pk']))
+        return reverse("p_data",args=[self.kwargs['pk']])
+        # return f"/rate/profs/{str(self.kwargs['pk'])}/"
     def form_valid(self, form):
         form.instance.user = self.request.user
+        comment_activity = Activity(user=self.request.user,category=Activity.COMMENT)
+        comment_activity.comment_log(form.save())
+        comment_activity.save()
         return super().form_valid(form)
     
     
@@ -171,6 +177,9 @@ class CourseReviewCreateView(LoginRequiredMixin,CreateView):
             return reverse("c_data", args=self.kwargs['pk'])
     def form_valid(self, form):
         form.instance.user = self.request.user
+        comment_activity = Activity(user=self.request.user, category=Activity.COMMENT)
+        comment_activity.comment_log(form.save())
+        comment_activity.save()
         return super().form_valid(form)
     
     
@@ -203,7 +212,17 @@ class ReportCreateView(LoginRequiredMixin,CreateView):
         form.instance.review = review
         form.instance.reporting_user = self.request.user
         
+        report_activity = Activity(user=self.request.user,category=Activity.REPORT)
+        report_activity.report_log(report=form.save())
+        report_activity.save()
+
         return super().form_valid(form)
 
-
+    
+class LogoutLog(LogoutView):
+    def dispatch(self, request, *args, **kwargs):
+        logout_activity = Activity(user=self.request.user,category=Activity.LOGOUT)
+        logout_activity.logout_log()
+        logout_activity.save()
+        return super().dispatch(request, *args, **kwargs)
     
