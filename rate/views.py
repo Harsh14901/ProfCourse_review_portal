@@ -13,6 +13,15 @@ import names
 from datetime import datetime as dt
 from django.contrib.auth.views import LoginView,LogoutView
 from django.core.exceptions import ValidationError
+
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from django.contrib.auth.models import User
+from django.core.mail import EmailMessage
+from django.contrib.auth import login
+from django.contrib.auth.tokens import *
 # Create your views here.
 
 
@@ -188,11 +197,49 @@ class CourseReviewCreateView(LoginRequiredMixin,CreateView):
             return {"course": course}
 
 
+def activate(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and default_token_generator.check_token(user, token):
+        user.is_active = True
+        user.save()
+        signup = Activity(user=user, category=Activity.SIGNUP)
+        signup.signup_log()
+        signup.save()
+        login(request, user)
+        # return redirect('home')
+        return render(request,"signup/signup_valid.html")
+    else:
+        return HttpResponse('Activation link is invalid!')
+
+
 class UserCreateView(CreateView):
     model = User
     template_name = "form/signup.html"
     form_class = SignUpForm
     success_url = "/accounts/profile/"
+
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.is_active = False
+        user.save()
+        current_site = get_current_site(self.request)
+        mail_subject = 'Activate your blog account.'
+        message = render_to_string('signup/acc_active_email.html', {
+            'user': user,
+            'domain': current_site.domain,
+            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            'token': default_token_generator.make_token(user),
+        })
+        to_email = form.cleaned_data.get('email')
+        email = EmailMessage(
+            mail_subject, message, to=[to_email]
+        )
+        email.send()
+        return render(self.request,"signup/signup_confirmaion.html")
 
 @login_required(login_url="/accounts/login/")
 def UserProfile(request):

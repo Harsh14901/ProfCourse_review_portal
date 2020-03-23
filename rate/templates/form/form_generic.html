@@ -2,7 +2,8 @@
 
 {% block base_body %}
     {% if form.errors %}
-    <h2 color="red"> Please Resolve the errors </h1>
+    <h2> Please Resolve the errors </h1>
+    <p style="color:red">{{form.errors}}</p>
     {% endif %}
 
     <form action="" method = "POST">
@@ -17,3 +18,4 @@
 
 {% block form_generic_body %}
 {% endblock form_generic_body %}
+

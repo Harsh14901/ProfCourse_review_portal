@@ -121,3 +121,9 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = 'user_profile'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'djangotestinhell@gmail.com'
+EMAIL_HOST_PASSWORD = 'help_inbent!23'
+EMAIL_PORT = 587

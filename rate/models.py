@@ -25,7 +25,7 @@ class Review(models.Model):
     # actual_name = models.CharField(max_length=50)
     # email = models.EmailField(max_length=254)
     user = models.ForeignKey(User, on_delete=models.CASCADE,null=True,blank=True)
-    timestamp = models.DateTimeField(auto_now=True, auto_now_add=False,null=True)
+    timestamp = models.DateTimeField(auto_now=False, auto_now_add=True,null=True)
 
     comment = models.TextField(max_length=4096)
     isAnonymous = models.BooleanField(default=False,verbose_name="Remain Anonymous?")
@@ -105,6 +105,8 @@ class Warnings(models.Model):
 
 
 class Banned(models.Model):
+    PERMANENT = "Banned Permanently"
+    FREE = "Free to relieve"
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     ban_date = models.DateTimeField(auto_now=True, auto_now_add=False)
     ban_duration = models.DurationField(null=True)
@@ -115,17 +117,18 @@ class Banned(models.Model):
         if(not self.permanent_ban):
             return self.ban_date + self.ban_duration
         else:
-            return "Banned Permanently"
+            return self.PERMANENT
 
     @property
     def time_to_relieve(self):
         if(not self.permanent_ban):
             if(self.ban_relieve > dt.today()):
-                return str((self.ban_relieve - dt.today()).days) + " days"
+                a = self.ban_relieve - dt.today()
+                return f"{a.days} days,{a.seconds//3600} hours"
             else:
-                return "Free to relieve"
+                return self.FREE
         else:
-            return "Banned permanently"
+            return self.PERMANENT
     
     def __str__(self):
         return self.user.__str__()
@@ -147,7 +150,7 @@ class Activity(models.Model):
 
     category = models.CharField(choices=CategoryChoices, max_length=50)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now=True, auto_now_add=False)
+    timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
     log = models.TextField(null=True)
     def __str__(self):
         return f"{self.category} | user : {self.user}"

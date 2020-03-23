@@ -4,7 +4,7 @@ from rate.models import *
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-
+import re
 
 
 class SignUpForm(UserCreationForm):
@@ -18,10 +18,28 @@ class SignUpForm(UserCreationForm):
 
     def save(self, commit=True):
         user = super().save(commit=commit)
-        signup = Activity(user=user,category=Activity.SIGNUP)
-        signup.signup_log()
-        signup.save()
         return user
+
+    def is_valid(self):
+        valid = super().is_valid()
+        
+        if not valid:
+            return valid
+        
+        email = self.cleaned_data['email']
+        r1 = re.compile('(.*)@.*iitd.ac.in')
+        match = r1.search(email)
+        if(match is None):
+            self._errors[''] = "This portal is only for IITD students. Trespassers will be hacked!!"
+            return False
+        kerb_id = match.groups(1)[0]
+        users = User.objects.filter(email__endswith="iitd.ac.in").filter(email__startswith=kerb_id)
+        if (len(users) != 0):
+            print(users)
+            self._errors[''] = "This email address already exists. Try fooling someone else!!"
+            return False
+
+        return valid
 
 
 class ReviewForm(forms.ModelForm):
@@ -49,7 +67,7 @@ class ReviewForm(forms.ModelForm):
 class AuthenticationFormCheckBanned(AuthenticationForm):
     def confirm_login_allowed(self, user):
         bl = user.banned_set.all()
-        if (bl and "Free" not in bl[0].time_to_relieve):
+        if (bl and bl[0].time_to_relieve != Banned.FREE):
             msg = "Your account has been banned "
             if("permanent" in bl[0].time_to_relieve):
                 msg += "PERMANENTLY"
@@ -60,6 +78,8 @@ class AuthenticationFormCheckBanned(AuthenticationForm):
                 code='inactive',
             )
         else:
+            if bl:
+                bl[0].delete()
             login_activity = Activity(user=user,category=Activity.LOGIN)
             login_activity.login_log()
             login_activity.save()

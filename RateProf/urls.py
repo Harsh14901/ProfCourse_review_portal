@@ -13,7 +13,9 @@ urlpatterns = [
     url(r'accounts/login/', auth_views.LoginView.as_view(authentication_form=AuthenticationFormCheckBanned), name='user_login'),
     url(r'accounts/logout', LogoutLog.as_view(),name="logout"),
     url('accounts/', include('django.contrib.auth.urls')),
-    url(r'^signup/$', UserCreateView.as_view(), name="signup")
+    url(r'^signup/$', UserCreateView.as_view(), name="signup"),
+    url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        activate, name='activate'),
 ]
 
 

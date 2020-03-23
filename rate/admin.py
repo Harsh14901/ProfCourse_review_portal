@@ -37,7 +37,7 @@ def ban_users(modeladmin, request, queryset):
     post = request.POST
     ban_perm = False
     duration = None
-    if(request.POST['permanent_ban']):
+    if("permanent_ban" in request.POST and request.POST['permanent_ban']):
         ban_perm = True
     else:
         duration = timedelta(days=int(post['duration_0']), hours=int(post['duration_1']), minutes=int(post['duration_2']), seconds=int(post['duration_3']))
@@ -65,7 +65,7 @@ ban_users.short_description = "Ban all the users who posted these reviews"
 
 class BanDurationForm(ActionForm):
     duration = forms.DurationField(widget=tdw(), required=False, initial=timedelta(days=10), help_text="Enter the duration to ban all the selected users", label="Ban Duration")
-    permanent_ban = forms.BooleanField(label="Ban Permanently?", initial=False)
+    permanent_ban = forms.BooleanField(label="Ban Permanently?", initial=False,required=False)
 
 
 @admin.register(ReportReview)
