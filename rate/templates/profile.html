@@ -13,6 +13,7 @@
 <li> <textarea cols = "40" rows = "10" readonly> {{warning.message}}</textarea>
 {% endfor %}
 </ol>
+<a href = "{% url 'clear_warnings' %}"> Ok I have understood, I will take care in th future. Clear the warnings</a>
 {% endif %}
 <h2><u> Recent Reviews </u></h2>
 

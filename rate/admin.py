@@ -23,7 +23,15 @@ def send_warning_to_user(modeladmin, request, queryset):
     for report in queryset:
         user = report.reported_user
         warn = Warnings(user=user)
-        warn.message = f"You have been warned for the following comment on Prof. {report.review.prof.name} for the course {report.review.course}\n\n[{report.review.comment}]\n\nIf u do this again u might be banned form posting anything on this system by the administrators"
+        if(report.review.prof is None):
+            p_name = "None"
+        else:
+            p_name = report.review.prof.name
+        if(report.review.course is None):
+            c_code = report.review.course.code
+        else:
+            c_code = report.review.course.code
+        warn.message = f"You have been warned for the following comment on Prof. {p_name} for the course {c_code}\n\n[{report.review.comment}]\n\nIf u do this again u might be banned form posting anything on this system by the administrators"
         warn.save()
     messages.success(request, f"{str(len(queryset))} users have been warned")
 

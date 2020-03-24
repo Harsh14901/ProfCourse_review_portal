@@ -9,7 +9,8 @@ from rate.forms import *
 urlpatterns = [
     url('admin/', admin.site.urls),
     url('rate/',include("rate.urls")),
-    url(r'accounts/profile/',UserProfile,name='user_profile'),
+    url(r'accounts/profile/$',UserProfile,name='user_profile'),
+    url(r'accounts/profile/clear/$',ClearUserWarnings,name='clear_warnings'),
     url(r'accounts/login/', auth_views.LoginView.as_view(authentication_form=AuthenticationFormCheckBanned), name='user_login'),
     url(r'accounts/logout', LogoutLog.as_view(),name="logout"),
     url('accounts/', include('django.contrib.auth.urls')),

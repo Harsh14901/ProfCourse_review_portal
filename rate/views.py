@@ -244,6 +244,12 @@ def UserProfile(request):
     activity = request.user.review_set.all().order_by("-timestamp")
     return render(request,template_name="profile.html",context={"reviews":activity})
 
+@login_required(login_url="/accounts/login/")
+def ClearUserWarnings(request):
+    for warning in request.user.warnings_set.all():
+        print(warning.user)
+        warning.delete()
+    return redirect("user_profile")
 
 class ReportCreateView(LoginRequiredMixin,CreateView):
     login_url = "/accounts/login/"
