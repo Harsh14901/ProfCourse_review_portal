@@ -39,6 +39,9 @@ class Review(models.Model):
     attendance = models.IntegerField(choices = RatingChoices,default=0)
     overall_rating =models.IntegerField(choices = RatingChoices,default=0)
 
+    likes = models.PositiveIntegerField(default=0)
+    dislikes = models.PositiveIntegerField(default=0)
+    
     def __str__(self):
         p_name=""
         c_name=""
@@ -135,6 +138,8 @@ class Banned(models.Model):
     
 
 class Activity(models.Model):
+    LIKE = "Like"
+    DISLIKE = "Disike"
     SIGNUP = "Signup"
     LOGIN = "Login"
     LOGOUT = "Logout"
@@ -146,6 +151,8 @@ class Activity(models.Model):
         (LOGIN,"Login"),
         (LOGOUT,"Logout"),
         (SIGNUP,"Signup"),
+        (LIKE,"Like"),
+        (DISLIKE,"Dislike"),
     )
 
     category = models.CharField(choices=CategoryChoices, max_length=50)
@@ -169,5 +176,18 @@ class Activity(models.Model):
 
     def report_log(self,report):
         self.log = f"{self.user} reported a comment by {report.reported_user} on prof {report.review.prof} and course {report.review.course}"
-     
 
+    def like_log(self,review):
+        self.log = f"{self.user} Liked a comment by {review.user} on prof {review.prof.name} and course {review.course.code}"
+
+    def dislike_log(self,review):
+        self.log = f"{self.user} Disliked a comment by {review.user} on prof {review.prof.name} and course {review.course.code}"
+
+     
+class Credibility(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE,null=True)
+    trust = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"User - {self.user} | Trust {self.trust}"
+    

@@ -11,7 +11,9 @@
             {% if review.course is not None %}
             <h5> COURSE : {{review.course.code}} </h5>
             {% endif %}
-
+            {% if review.user.credibility %}
+            <h5> CREDIBILITY : {{review.user.credibility.trust}} </h5>
+            {% endif %}
              <textarea name="text" wrap="hard" rows="5" cols="20" readonly > {{review.comment}} </textarea>
             <div class = "ratings">
                 <ul>
@@ -22,6 +24,11 @@
                     <li> <b> Overall Rating : {{review.get_overall_rating_display}} </b>
                 </ul>
             </div>
+            <div>
+            <p> Likes : {{review.likes}} | Dislikes : {{review.dislikes}} </p>
+            </div>
             {% if review.user != user %}
             <p> <a href = {% url 'report' review.id%}> Click here to report this </a></p>
+            <button type="submit" name="like"  onclick = "location.href =  '{% url 'like' review.id%}'">Like</button>
+            <button type="submit" name="dislike"  onclick = "location.href = '{% url 'dislike' review.id%}'">Dislike</button>
             {% endif %}

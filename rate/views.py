@@ -1,4 +1,4 @@
-from django.shortcuts import render , get_object_or_404
+from django.shortcuts import render , get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import ListView
 from django.views.generic import DetailView
@@ -22,6 +22,7 @@ from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.contrib.auth import login
 from django.contrib.auth.tokens import *
+from django.db.models import ObjectDoesNotExist
 # Create your views here.
 
 
@@ -227,7 +228,7 @@ class UserCreateView(CreateView):
         user.is_active = False
         user.save()
         current_site = get_current_site(self.request)
-        mail_subject = 'Activate your blog account.'
+        mail_subject = 'Activate your user account.'
         message = render_to_string('signup/acc_active_email.html', {
             'user': user,
             'domain': current_site.domain,
@@ -239,7 +240,7 @@ class UserCreateView(CreateView):
             mail_subject, message, to=[to_email]
         )
         email.send()
-        return render(self.request,"signup/signup_confirmaion.html")
+        return render(self.request,"signup/signup_confirm.html")
 
 @login_required(login_url="/accounts/login/")
 def UserProfile(request):
@@ -273,3 +274,44 @@ class LogoutLog(LogoutView):
         logout_activity.save()
         return super().dispatch(request, *args, **kwargs)
     
+@login_required(login_url="/accounts/login/")
+def LikeReview(request,pk):
+    review = get_object_or_404(Review,id=pk)
+    review.likes +=1
+    user = review.user
+    try:
+        user.credibility
+    except ObjectDoesNotExist:
+        c1 = Credibility(user=user)
+        c1.save()
+    user.credibility.trust += 1
+
+    like_activity = Activity(user=user)
+    like_activity.like_log()
+    
+    like_activity.save()
+    user.credibility.save()
+    review.save()
+    print(request.path)
+    return redirect("user_profile")
+
+
+@login_required(login_url="/accounts/login/")
+def DislikeReview(request,pk):
+    review = get_object_or_404(Review,id=pk)
+    review.dislikes +=1
+    user = review.user
+    try:
+        user.credibility
+    except ObjectDoesNotExist:
+        c1 = Credibility(user=user)
+        c1.save()
+    user.credibility.trust -= 1
+ 
+    dislike_activity = Activity(user=user)
+    dislike_activity.dislike_log()
+    
+    dislike_activity.save()
+    user.credibility.save()
+    review.save()
+    return redirect("user_profile")

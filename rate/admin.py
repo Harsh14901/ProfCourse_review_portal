@@ -10,6 +10,7 @@ admin.site.register(Dept)
 admin.site.register(Review)
 admin.site.register(Profs)
 admin.site.register(Courses)
+admin.site.register(Credibility)
 
 
 def delete_reported_reviews(modeladmin, request, queryset):
