@@ -46,6 +46,28 @@ def index(request):
     #     review.user = user
     #     print(review.timestamp,review.user)
     #     review.save()
+
+    """ Populating likes and dislikes """
+    # for review in Review.objects.all():
+    #     try:
+    #         review.user.credibility
+    #     except ObjectDoesNotExist:
+    #         c1 = Credibility(user=review.user)
+    #         c1.save()
+    #     for i in range(30):
+    #         like = bool(random.randint(0,1))
+    #         if like:
+    #             review.likes += 1
+    #             review.user.credibility.trust += 1
+    #         else:
+    #             review.dislikes += 1
+    #             review.user.credibility.trust -= 1
+
+    #     review.save()
+    #     review.user.credibility.save()
+    #     print(review,review.likes, review.dislikes, review.user.credibility.trust)
+            
+
         
     
     return render(request,template_name="index.html")
@@ -115,31 +137,6 @@ class CoursesListView(ListView):
     template_name = "course/courses.html"
     context_object_name = "dept_list"
 
-
-# class ProfDetailView(DetailView):
-#     model=Profs
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['reviews'] = context['prof_data'].review_set.all()
-#         # print(context['reviews'])
-#         return context
-
-#     template_name = "prof/prof_page.html"
-#     context_object_name = "prof_data"
-
-
-# class CourseDetailView(DetailView):
-#     model=Courses
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['reviews'] = context['course_data'].review_set.all()
-#         return context
-
-
-#     template_name = "course/course_page.html"
-#     context_object_name = "course_data"
 
 def ProfPage(request, pk):
     prof_data = get_object_or_404(Profs,pk=pk)
