@@ -8,8 +8,8 @@ from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .forms import *
-import random
-import names
+# import random
+# import names
 from datetime import datetime as dt
 from django.contrib.auth.views import LoginView,LogoutView
 from django.core.exceptions import ValidationError
