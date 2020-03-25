@@ -1,4 +1,8 @@
 {% extends 'base.html' %}
+
+{% load socialaccount %}
+
+
 {% block base_body %}
 
 {% for error in form.non_field_errors %}
@@ -23,5 +27,9 @@
 
 <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
 <a href ="{% url 'signup' %}"> New User? Click to sign up </a>
-
+<br>
+  <p><strong>-- OR --</strong></p>
+  {% comment %} <a href="{% url 'social:begin' 'github' %}">Login with GitHub</a><br> {% endcomment %}
+  <a href="{% provider_login_url 'google' %}">Login with Google</a><br/>
+  <a href="{% provider_login_url 'github' %}">Login with Github</a>
 {% endblock base_body %}
