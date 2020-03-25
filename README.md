@@ -59,6 +59,27 @@ The `SOCIAL ACCOUNTS` section lists the users that have logged in via social aut
 
 The other sections do not contain any significant information and can be ignored.
 
+## Admin Panel
+
+The admin has been given the authority to 
+
+ - Send warning to reported users
+ - Delete reviews that have been reported 
+ - Ban Users for a duration that deems fit to the admin. It is possible to ban the user **PERMANENTLY**. The banned users will be automatically allowed to re-login once their ban duration ends.
+
+For performing these features 
+
+![Admin Panel](https://github.com/Harsh14901/ProfCourse_review_portal/blob/master/documentation.png)
+ 1. Login as admin
+ 2. Click on the `Report Reviews` database
+ 3. Select some reports on which you want to perform an action
+ 4. Click on the action drop down and you will be presented with some options.
+ 5. To ban a user you can specify a duration to ban the user or ban the user permanently. The default duration is 10 days.
+ 6. When done selecting click on the `GO` button to execute the actions.
+
+**Note:** Re-banning a user will override the previous ban and the new ban date will be the date and time when the new ban is applied
+
+To see the banned user details like Time to Relieve etc. navigate to the `Banneds` database under the `RATE` section. The time to relieve displays whether the user is "Free to Relieve", "Banned Permanently" or has a  certain duration left for the ban to relieve.
 # Features
 This section aims to explain all the features that have been implemented by the developer for the portal.
 
@@ -104,6 +125,7 @@ Each review has the following features -
  2. Along with the user details the **credibility** of the reviewing user is given to help the user judge the relevance of the review.
  3. Each **logged in user** has the option to **like or dislike** a particular review
  4. Each **logged in user** also has the option to **report** the review. On clicking it redirects to a form that asks the reason and category(`SPAM, FRAUD, OFFENSIVE`) for reporting such a comment.
+**Note:** A user is not allowed to like/dislike/report his own review
 
 ### Rate Courses
 
