@@ -58,17 +58,27 @@ def index(request):
     #         like = bool(random.randint(0,1))
     #         if like:
     #             review.likes += 1
-    #             review.user.credibility.trust += 1
     #         else:
     #             review.dislikes += 1
-    #             review.user.credibility.trust -= 1
 
     #     review.save()
-    #     review.user.credibility.save()
-    #     print(review,review.likes, review.dislikes, review.user.credibility.trust)
-            
+    #     print(review,review.likes, review.dislikes)
 
-        
+    """ Populating user credibility """        
+    # ul = User.objects.exclude(username="admin")
+    # for user in ul:
+    #         rl = user.review_set.all()
+    #         trust = 0
+    #         for review in rl:
+    #             trust += review.likes - review.dislikes
+    #         try:
+    #             user.credibility
+    #         except ObjectDoesNotExist:
+    #             c1 = Credibility(user=user)
+    #             c1.save()
+    #         user.credibility.trust = trust
+    #         user.credibility.save()
+    #         print(user.credibility)
     
     return render(request,template_name="index.html")
 
@@ -289,8 +299,8 @@ def LikeReview(request,pk):
         c1.save()
     user.credibility.trust += 1
 
-    like_activity = Activity(user=user)
-    like_activity.like_log()
+    like_activity = Activity(user=request.user,category=Activity.LIKE)
+    like_activity.like_log(review)
     
     like_activity.save()
     user.credibility.save()
@@ -311,8 +321,8 @@ def DislikeReview(request,pk):
         c1.save()
     user.credibility.trust -= 1
  
-    dislike_activity = Activity(user=user)
-    dislike_activity.dislike_log()
+    dislike_activity = Activity(user=request.user,category=Activity.DISLIKE)
+    dislike_activity.dislike_log(review)
     
     dislike_activity.save()
     user.credibility.save()

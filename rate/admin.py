@@ -7,16 +7,14 @@ from datetime import timedelta
 from durationwidget.widgets import TimeDurationWidget as tdw
 # Register your models here.
 admin.site.register(Dept)
-admin.site.register(Review)
 admin.site.register(Profs)
 admin.site.register(Courses)
-admin.site.register(Credibility)
 
 
 def delete_reported_reviews(modeladmin, request, queryset):
     for report in queryset:
         report.review.delete()
-    messages.success(request, f"{str(len(queryset))} reviews have been warned")
+    messages.success(request, f"{str(len(queryset))} reviews have been deleted")
 
 
 def send_warning_to_user(modeladmin, request, queryset):
@@ -91,3 +89,15 @@ class BannedAdmin(admin.ModelAdmin):
 @admin.register(Activity)
 class ActivityAdmin(admin.ModelAdmin):
     list_display = ['user','category','timestamp','log']
+
+@admin.register(Warnings)
+class WarningsAdmin(admin.ModelAdmin):
+    list_display=['user']
+
+@admin.register(Credibility)
+class CredibilityAdmin(admin.ModelAdmin):
+    list_display = ['user','trust']
+
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ['user','prof','course','overall_rating','likes','dislikes','isAnonymous']
