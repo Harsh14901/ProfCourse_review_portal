@@ -1,0 +1,128 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{tabularx}
+\usepackage[colorlinks=true]{hyperref}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+
+\pagestyle{fancy}
+\fancyhf{}
+\chead{Recruitment Assignment}
+\rfoot{\thepage}
+
+\begin{document}
+    \begin{titlepage}
+        \centering
+        \Large INDIAN INSTITUTE OF TECHNOLOGY DELHI\\[1.0 cm]
+        \begin{center}
+            \includegraphics[width=0.6\textwidth]{24647729.png}
+        \end{center}
+        
+        \LARGE Dev Club\\[0.1cm]
+        \Large \underline{Recruitment Assignment}\\[1cm]
+        \Large March 26, 2020 \\[1cm]
+        \Large HARSH AGRAWAL \\[0.2cm]
+        \large 2019CS50431 \\[2cm]
+        \begin{flushright}
+            \large \href{https://github.com/Harsh14901}{Github Profile}
+        \end{flushright}
+        
+    \end{titlepage}
+\section{Part 1 : WARM UP}
+\textbf{Claim :} It would be better for the server to store the zip file of the contents of a course and provide the user the zip file instantly when the user asks for it.
+When new content is uploaded by a user then it is NOT necessary to update the zip file immediately, rather the admin can fix a time in a year when all zip files have to be uploaded \\[0.2cm]
+
+\textbf{Arguments:}
+\begin{enumerate}
+    \item The server experiences maximum load during the exams i.e. Minor, Majors, Quizzes etc. During these times it is highly impractical to first zip the SAME contents (since no new content is being added during exams) for each user and then provide the SAME zip file to each user. 
+    \item For instance when Minor 2 is on the go and someone uploads the Minor 1 papers then it is not necessary to zip the Minor 1 paper of that year since the current students have already appeared for Minor 1 and they do not need it. Those who actually need it are the next yearites.
+    \item The admin can decide when to create the zip depending on the times when server is under the least load and most papers have been uploaded. Or better wait for BSW to collect those papers, scrap their website and make zips when students are busy enjoying their holidays!!
+\end{enumerate}
+
+\textbf{Suggestion:} An approach can be to write a script that always runs on the server, it is a short script. What it will do is look for changes in the BSW website, and match it with our database. If a change is found then automatically scrap it and schedule the zip operation for sometime during the day something like lunch time 12:00 - 2:00 p.m. It will notify the admin about the scheduled operation. If admin has some objection then he can just click on a link where he can postpone the operation to some tiime later. \\[0.2cm]
+
+So basically this also automates the operations for admin. The script can be optimised further like scheduling the zip operations of every course into one operation rather than different operations for each paper scrapped.
+
+\newpage
+\section{Part 3 : Research}
+
+\subsection{Networking}
+\subsubsection{What happens when we type in the URL in a web browser?}
+So basically when we enter something into the address bar of a web browser. It queries the DNS (Domain Name System) server for the URL of the page.
+What a DNS server does it actually maintains a mapping of a Domain name (human readable) into IP addresses (set of numbers that uniquely identifies a location on the internet).
+The DNS returns the IP to the browser. Then the browser makes a HTTP GET request to the web server hosted at that IP. The server returns a HTML response to the client (our web browser in this case).
+This HTML response is rendered by the web browser and displayed in a better understandable format to the user.
+
+\subsubsection{Hosting a server on LAN}
+So python has a module named \textit{SimpleHTTPServer} which can be used to host a server in any directory of our computer. Just type in the following command in the directory where you want to host the server
+
+\begin{verbatim}
+    python3 -m SimpleHTTPServer 8080
+\end{verbatim}
+This will host a server on the port 8080 in the directory where the command is run. To allow someone to visit your webpage find out your IP in the LAN network by typing \textit{ifconfig} in the terminal and see the \textit{IPV4} address.
+Suppose your IP address is $192.168.1.5$ then your friend can access this webpage by typing in $http://192.168.1.5:8080/$ in his web browser.\\[0.2cm]
+
+\textbf{Note:} This works only for static HTML sites without any dependencies.
+
+\subsubsection{Will this work on different LAN's}
+No, for different LAN networks like one on IITD WiFi and other on mobile date (the LAN can be the ISP's subnet), you will require a public IP address to communicate.
+But for this to work you will have to enable port forwarding on the IITD router which is obvyiously not possible. Had it been your personal router we can enable port forwarding of port 8080 to our computer.
+What actually happens is when someone tries to access our public IPV4 they cannot access it directly they have to go through the router. The router performs what is called NAT (Network Address Translation) interconverting public IP to local IP. This occurs since the number of IPv4 addresses is limited and not many devices support IPv6.
+So instead of giving each node in a LAN a public address, only the router is given a public address and the router lends out private addresses to all the devices connected to the router.\\[0.2cm] So the router talks to the internet on each devices' behalf using different ports for each device.
+With port forwarding of 8080 to our private IP we can allow any external connections to the router at port 8080 to be forwarded to your computer's port 8080 on which our simple web server is hosted.
+ 
+\subsubsection{Nginx and Apache}
+Both are applications to host a web server on localhost. However nginx can also be used as a proxy sever. They act as web servers by constantly listening on ports for incoming connections, proccesses the request and responds with a reponse that the client recieves.
+A proxy server on the other hand makes requests to the web server on behalf of the client and returns a response to the client as if it had originally appeared from the webserver and not the proxy server.
+
+\subsection{Sql vs NoSql}
+
+Clearly the database is quite structured as it involves the details of a professor. The structure of the databse is unlikely to change, and to display the information quick queries are essential. Hence SQL databases seem to be the best choices.
+We can have different models like
+
+\begin{itemize}
+    \item \textbf{Professor: }It will be the basic model of a professor containing the personal information of a professor.
+    \item \textbf{Courses: }It will be a course model with details of the with Professor as a ManytoMany key.
+    \item \textbf{Projects: }It will be a project model with details of a project with fields like Funding, Duration, Awards, Recruitment etc. It will have professor as a foreign key.
+    \item \textbf{Research: }It will be a research table with details of the research that professor can be conducting. It can also contain fields like Description, Duration, Topic etc. It will also have professor as its foreign key. 
+\end{itemize}
+
+\subsection{Timing in JavaScript}
+The functions setTimeout() and setInterval() are pretty good at handling timing tasks but not all applications may be suitable for them.
+There are some other functions that can be used to measure timings in JavaScript as illustrated in this \href{https://www.geeksforgeeks.org/how-to-measure-time-taken-by-a-function-to-execute-using-javascript/}{GeeksforGeeks article}
+\begin{enumerate}
+    \item Using the perfomance.now() method
+    \item Using the console.time() method
+    \item Using the Date.now() function.
+\end{enumerate}
+
+However it should be noted that some exploits rely on the time taken by the server to respond and that is why JavaScript introduces some intentional delays to make very accurate time measurements practically not feasible.
+
+\end{document}
