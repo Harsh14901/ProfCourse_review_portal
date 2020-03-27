@@ -1,12 +1,31 @@
 {% extends 'base.html' %}
 
+{% load socialaccount %}
+
 {% block base_body %}
 <h1> Hello {{user.first_name}} </h1>
 <ul>
 <li> Username: {{user.username}}
 <li> Email Address : {{user.email}}
 <li> Trust : {{user.credibility.trust}}
+
 </ul>
+
+{% get_social_accounts user as accounts %}
+{% if accounts.google %}
+<h3> Account successfully linked with google</h3>
+{% else %}
+<a href="{% provider_login_url "google" process="connect" %}"> Click here to link your account with google</a>
+{% endif %}
+<br/>
+{% if accounts.github %}
+<h3> Account successfully linked with Github </h3>
+{% else %}
+<a href="{% provider_login_url "github" process="connect" %}"> Click here to link your account with github </a>
+{% endif %}
+
+
+
 {% if user.warnings_set.all %}
 <ol>
 {% for warning in user.warnings_set.all %}
@@ -15,8 +34,9 @@
 </ol>
 <a href = "{% url 'clear_warnings' %}"> Ok I have understood, I will take care in th future. Clear the warnings</a>
 {% endif %}
-<h2><u> Recent Reviews </u></h2>
 
+
+<h2><u> Recent Reviews </u></h2>
 <ol>
 {% for review in reviews %}
     <h3> Timestamp : {{review.timestamp}} </h3>
