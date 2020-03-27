@@ -103,6 +103,7 @@ This section aims to explain all the features that have been implemented by the 
  1. **Bio** - It displays the basic info of a user like name, email-address, username etc.. It also displays the **CREDIBILITY** of the user logged in
  2. **Warnings** - It lists all the warnings of a user that have been issued by the admin. Following it will be an option to clear all the warnings after taking the consent from the user that he/she will not repeat such actions. *This section is displayed only for users that have some warnings issued*. Other users will not have this section
  3. **Recent Activity** - It displays the recent activity of a user which lists all the reviews that have been written by the user.
+ 4. **Linked Accounts** - It allows to link a user with social accounts like Google and Github. Once linked, signing in with those social accounts will lead to this existing user profile.
 
 ### Rate Profs
 
